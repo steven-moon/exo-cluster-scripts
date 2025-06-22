@@ -77,6 +77,9 @@ tail -f /var/log/exo/exo.log
 
 # Test the web interface
 open http://localhost:52415
+
+# Test the exo command (now available system-wide)
+exo --help
 ```
 
 ## Installation Details
@@ -88,7 +91,8 @@ The installation process includes:
 3. **MLX Version Update**: Updates MLX from 0.22.0 to 0.26.1 in `setup.py`
 4. **Virtual Environment**: Creates `/opt/exo/venv` for isolated Python environment
 5. **exo Installation**: Installs exo in development mode within the virtual environment
-6. **Service Setup**: Configures LaunchDaemon for automatic startup
+6. **System-wide Command**: Creates `/usr/local/bin/exo` symlink for easy access
+7. **Service Setup**: Configures LaunchDaemon for automatic startup
 
 ### Virtual Environment Benefits
 

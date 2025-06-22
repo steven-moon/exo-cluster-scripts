@@ -47,6 +47,9 @@ launchctl unload "$LAUNCH_AGENTS_DIR/$PLIST_FILE" 2>/dev/null || true
 print_status "Removing configuration files..."
 rm -f "$LAUNCH_AGENTS_DIR/$PLIST_FILE"
 
+print_status "Removing system-wide exo command..."
+rm -f /usr/local/bin/exo
+
 print_status "Removing installation directory..."
 rm -rf "$EXO_INSTALL_DIR"
 

@@ -219,6 +219,14 @@ verify_installation() {
         return 1
     fi
     
+    # Check if system-wide exo command exists
+    if [ -x "/usr/local/bin/exo" ]; then
+        print_status "✓ System-wide exo command available"
+    else
+        print_error "✗ System-wide exo command not found"
+        return 1
+    fi
+    
     # Check if startup script exists
     if [ -x "$EXO_INSTALL_DIR/scripts/$STARTUP_SCRIPT" ]; then
         print_status "✓ Startup script installed"
@@ -246,6 +254,32 @@ verify_installation() {
     return 0
 }
 
+# Function to create system-wide exo command
+create_exo_command() {
+    print_status "Creating system-wide exo command..."
+    
+    # Create symlink in /usr/local/bin (standard location for user-installed binaries)
+    local exo_symlink="/usr/local/bin/exo"
+    local exo_executable="$VENV_DIR/bin/exo"
+    
+    if [ -x "$exo_executable" ]; then
+        # Remove existing symlink if it exists
+        if [ -L "$exo_symlink" ]; then
+            rm "$exo_symlink"
+        fi
+        
+        # Create new symlink
+        ln -sf "$exo_executable" "$exo_symlink"
+        chmod +x "$exo_symlink"
+        
+        print_status "✓ exo command available at: $exo_symlink"
+        print_status "✓ You can now run 'exo --help' from anywhere"
+    else
+        print_error "✗ exo executable not found at $exo_executable"
+        return 1
+    fi
+}
+
 # Main installation process
 main() {
     check_existing_installation
@@ -254,6 +288,7 @@ main() {
     configure_mlx
     setup_virtual_environment
     install_startup_scripts
+    create_exo_command
     set_permissions
     load_service
     
@@ -266,6 +301,7 @@ main() {
         print_status "  - Installation directory: $EXO_INSTALL_DIR"
         print_status "  - Virtual environment: $VENV_DIR"
         print_status "  - MLX version: Updated to 0.26.1"
+        print_status "  - exo command: /usr/local/bin/exo"
         print_status "  - Web interface: http://localhost:52415"
         print_status "  - API endpoint: http://localhost:52415/v1/chat/completions"
         print_status ""
@@ -274,6 +310,9 @@ main() {
         print_status "  Stop:    sudo launchctl stop com.exolabs.exo"
         print_status "  Status:  sudo launchctl list | grep exo"
         print_status "  Logs:    tail -f /var/log/exo/exo.log"
+        print_status ""
+        print_status "To test exo command:"
+        print_status "  exo --help"
         print_status ""
         print_status "To uninstall:"
         print_status "  sudo ./scripts/uninstall_exo_service.sh"
