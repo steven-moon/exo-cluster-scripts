@@ -147,7 +147,10 @@ start_exo() {
     
     # Start exo in the background
     log_message "Executing: $exo_cmd"
-    $exo_cmd > "$LOG_FILE" 2>&1 &
+    
+    # Use nohup to prevent the process from being terminated when the parent script exits
+    # and redirect output properly to capture both stdout and stderr
+    nohup $exo_cmd >> "$LOG_FILE" 2>&1 &
     
     local exo_pid=$!
     echo "$exo_pid" > "$PID_FILE"
@@ -155,7 +158,7 @@ start_exo() {
     log_message "exo started with PID: $exo_pid"
     
     # Wait a moment to check if it started successfully
-    sleep 5
+    sleep 10
     if ps -p "$exo_pid" > /dev/null 2>&1; then
         log_message "exo is running successfully"
         log_message "Web interface available at: http://localhost:${EXO_WEB_PORT:-52415}"
