@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Example configuration file for exo startup script
-# Copy this file to /opt/exo/startup_scripts/exo_config.sh and modify as needed
+# Copy this file to /opt/exo/scripts/exo_config.sh and modify as needed
 # Then update start_exo.sh to source this configuration
 
 # =============================================================================
@@ -65,7 +65,7 @@ export EXO_WEB_HOST="0.0.0.0"
 # =============================================================================
 
 # To use this configuration:
-# 1. Copy this file: cp exo_config_example.sh /opt/exo/startup_scripts/exo_config.sh
-# 2. Edit the configuration: nano /opt/exo/startup_scripts/exo_config.sh
+# 1. Copy this file: cp exo_config_example.sh /opt/exo/scripts/exo_config.sh
+# 2. Edit the configuration: nano /opt/exo/scripts/exo_config.sh
 # 3. Uncomment and modify the settings you need
 # 4. Restart the service: sudo launchctl restart com.exolabs.exo 

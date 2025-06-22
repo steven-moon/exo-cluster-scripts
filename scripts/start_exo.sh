@@ -66,7 +66,7 @@ find_exo_executable() {
 
 # Function to load configuration
 load_configuration() {
-    local config_file="/opt/exo/startup_scripts/exo_config.sh"
+    local config_file="/opt/exo/scripts/exo_config.sh"
     if [ -f "$config_file" ]; then
         log_message "Loading configuration from $config_file"
         source "$config_file"

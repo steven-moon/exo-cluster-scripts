@@ -87,7 +87,7 @@ create_directories() {
     mkdir -p "$EXO_INSTALL_DIR"
     
     print_status "Creating startup scripts directory..."
-    mkdir -p "$EXO_INSTALL_DIR/startup_scripts"
+    mkdir -p "$EXO_INSTALL_DIR/scripts"
     
     print_status "Creating log directory..."
     mkdir -p /var/log/exo
@@ -182,9 +182,9 @@ setup_virtual_environment() {
 # Function to install startup scripts
 install_startup_scripts() {
     print_status "Installing startup script..."
-    mkdir -p "$EXO_INSTALL_DIR/startup_scripts"
-    cp "$SCRIPT_DIR/$STARTUP_SCRIPT" "$EXO_INSTALL_DIR/startup_scripts/"
-    chmod +x "$EXO_INSTALL_DIR/startup_scripts/$STARTUP_SCRIPT"
+    mkdir -p "$EXO_INSTALL_DIR/scripts"
+    cp "$SCRIPT_DIR/$STARTUP_SCRIPT" "$EXO_INSTALL_DIR/scripts/"
+    chmod +x "$EXO_INSTALL_DIR/scripts/$STARTUP_SCRIPT"
     
     print_status "Installing launch daemon configuration..."
     cp "$SCRIPT_DIR/$PLIST_FILE" "$LAUNCH_AGENTS_DIR/"
@@ -220,7 +220,7 @@ verify_installation() {
     fi
     
     # Check if startup script exists
-    if [ -x "$EXO_INSTALL_DIR/startup_scripts/$STARTUP_SCRIPT" ]; then
+    if [ -x "$EXO_INSTALL_DIR/scripts/$STARTUP_SCRIPT" ]; then
         print_status "✓ Startup script installed"
     else
         print_error "✗ Startup script not found"
@@ -276,7 +276,7 @@ main() {
         print_status "  Logs:    tail -f /var/log/exo/exo.log"
         print_status ""
         print_status "To uninstall:"
-        print_status "  sudo ./startup_scripts/uninstall_exo_service.sh"
+        print_status "  sudo ./scripts/uninstall_exo_service.sh"
     else
         print_error "Installation verification failed. Please check the logs and try again."
         exit 1

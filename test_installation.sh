@@ -31,7 +31,7 @@ print_header() {
 
 # Test configuration
 EXO_INSTALL_DIR="/opt/exo"
-STARTUP_SCRIPTS_DIR="startup_scripts"
+STARTUP_SCRIPTS_DIR="scripts"
 
 print_header "Starting exo installation and startup script tests..."
 
@@ -111,9 +111,9 @@ fi
 print_header "Test 6: Testing startup script functionality..."
 
 # Test the startup script with status command
-if [ -f "$EXO_INSTALL_DIR/startup_scripts/start_exo.sh" ]; then
+if [ -f "$EXO_INSTALL_DIR/scripts/start_exo.sh" ]; then
     print_status "Testing existing startup script..."
-    if sudo "$EXO_INSTALL_DIR/startup_scripts/start_exo.sh" status > /dev/null 2>&1; then
+    if sudo "$EXO_INSTALL_DIR/scripts/start_exo.sh" status > /dev/null 2>&1; then
         print_status "Startup script status command works"
     else
         print_warning "Startup script status command failed (expected if not installed)"
@@ -174,8 +174,8 @@ echo "  - Access web interface: http://localhost:52415"
 echo "  - Test API: curl http://localhost:52415/v1/chat/completions"
 echo ""
 print_status "Configuration options:"
-echo "  - Copy example config: cp $STARTUP_SCRIPTS_DIR/exo_config_example.sh /opt/exo/startup_scripts/exo_config.sh"
-echo "  - Edit configuration: nano /opt/exo/startup_scripts/exo_config.sh"
+echo "  - Copy example config: cp $STARTUP_SCRIPTS_DIR/exo_config_example.sh /opt/exo/scripts/exo_config.sh"
+echo "  - Edit configuration: nano /opt/exo/scripts/exo_config.sh"
 echo "  - Restart service: sudo launchctl restart com.exolabs.exo"
 echo ""
 print_status "To uninstall:"

@@ -7,7 +7,7 @@
     
     <key>ProgramArguments</key>
     <array>
-        <string>/opt/exo/startup_scripts/start_exo.sh</string>
+        <string>/opt/exo/scripts/start_exo.sh</string>
         <string>start</string>
     </array>
     

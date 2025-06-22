@@ -18,14 +18,14 @@ Key features:
 
 ```
 exo-cluster-scripts/
-├── README.md                           # This comprehensive documentation
+├── README.md                           # Single comprehensive documentation
 ├── test_installation.sh                # Test script to verify installation
-└── startup_scripts/
-    ├── install_exo_service.sh          # Install exo as system service
+└── scripts/
+    ├── install_exo_service.sh          # Enhanced installation script (handles edge cases)
     ├── uninstall_exo_service.sh        # Remove exo service
-    ├── start_exo.sh                    # Main startup script
+    ├── start_exo.sh                    # Enhanced startup script (auto-configuration)
     ├── com.exolabs.exo.plist           # LaunchDaemon configuration
-    └── exo_config_example.sh           # Example configuration file
+    └── exo_config_example.sh           # Simplified example configuration
 ```
 
 ## Prerequisites
@@ -55,7 +55,7 @@ This script will verify all prerequisites and check that the startup scripts are
 ### 3. Install exo as a system service
 
 ```bash
-sudo ./startup_scripts/install_exo_service.sh
+sudo ./scripts/install_exo_service.sh
 ```
 
 This script will:
@@ -129,14 +129,14 @@ tail -f /var/log/exo/exo.log
 ### Uninstall the service
 
 ```bash
-sudo ./startup_scripts/uninstall_exo_service.sh
+sudo ./scripts/uninstall_exo_service.sh
 ```
 
 ## Configuration
 
 ### Customizing the startup script
 
-You can modify `/opt/exo/startup_scripts/start_exo.sh` to:
+You can modify `/opt/exo/scripts/start_exo.sh` to:
 
 - Change the exo home directory: Set `EXO_HOME` environment variable
 - Add custom command line arguments to exo
@@ -173,7 +173,7 @@ You can set these environment variables in the startup script:
 Copy and modify the example configuration:
 
 ```bash
-cp startup_scripts/exo_config_example.sh /opt/exo/startup_scripts/exo_config.sh
+cp scripts/exo_config_example.sh /opt/exo/scripts/exo_config.sh
 # Edit the configuration file as needed
 ```
 
@@ -286,9 +286,9 @@ export TINYGRAD_DEBUG=2
 Test the startup script manually before installing as a service:
 
 ```bash
-sudo /opt/exo/startup_scripts/start_exo.sh start
-sudo /opt/exo/startup_scripts/start_exo.sh status
-sudo /opt/exo/startup_scripts/start_exo.sh stop
+sudo /opt/exo/scripts/start_exo.sh start
+sudo /opt/exo/scripts/start_exo.sh status
+sudo /opt/exo/scripts/start_exo.sh stop
 ```
 
 ## Performance Optimization
