@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.exolabs.exo</string>
+    
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/exo/startup_scripts/start_exo.sh</string>
+        <string>start</string>
+    </array>
+    
+    <key>RunAtLoad</key>
+    <true/>
+    
+    <key>KeepAlive</key>
+    <true/>
+    
+    <key>StandardOutPath</key>
+    <string>/var/log/exo/launchd.log</string>
+    
+    <key>StandardErrorPath</key>
+    <string>/var/log/exo/launchd_error.log</string>
+    
+    <key>WorkingDirectory</key>
+    <string>/opt/exo</string>
+    
+    <key>UserName</key>
+    <string>root</string>
+    
+    <key>GroupName</key>
+    <string>wheel</string>
+    
+    <key>ProcessType</key>
+    <string>Background</string>
+    
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+    
+    <key>ExitTimeOut</key>
+    <integer>30</integer>
+</dict>
+</plist> 
