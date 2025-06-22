@@ -39,6 +39,18 @@
     <integer>10</integer>
     
     <key>ExitTimeOut</key>
-    <integer>30</integer>
+    <integer>60</integer>
+    
+    <key>SoftResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>1024</integer>
+    </dict>
+    
+    <key>HardResourceLimits</key>
+    <dict>
+        <key>NumberOfFiles</key>
+        <integer>2048</integer>
+    </dict>
 </dict>
 </plist> 
