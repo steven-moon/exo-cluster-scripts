@@ -227,6 +227,14 @@ verify_installation() {
         return 1
     fi
     
+    # Check if system-wide exo-status command exists
+    if [ -x "/usr/local/bin/exo-status" ]; then
+        print_status "✓ System-wide exo-status command available"
+    else
+        print_error "✗ System-wide exo-status command not found"
+        return 1
+    fi
+    
     # Check if startup script exists
     if [ -x "$EXO_INSTALL_DIR/scripts/$STARTUP_SCRIPT" ]; then
         print_status "✓ Startup script installed"
@@ -280,6 +288,32 @@ create_exo_command() {
     fi
 }
 
+# Function to create system-wide exo-status command
+create_exo_status_command() {
+    print_status "Creating system-wide exo-status command..."
+    
+    # Create symlink in /usr/local/bin
+    local status_symlink="/usr/local/bin/exo-status"
+    local status_script="$EXO_INSTALL_DIR/scripts/check_exo_status.sh"
+    
+    if [ -x "$status_script" ]; then
+        # Remove existing symlink if it exists
+        if [ -L "$status_symlink" ]; then
+            rm "$status_symlink"
+        fi
+        
+        # Create new symlink
+        ln -sf "$status_script" "$status_symlink"
+        chmod +x "$status_symlink"
+        
+        print_status "✓ exo-status command available at: $status_symlink"
+        print_status "✓ You can now run 'exo-status' or 'exo-status quick' from anywhere"
+    else
+        print_error "✗ Status script not found at $status_script"
+        return 1
+    fi
+}
+
 # Main installation process
 main() {
     check_existing_installation
@@ -289,6 +323,7 @@ main() {
     setup_virtual_environment
     install_startup_scripts
     create_exo_command
+    create_exo_status_command
     set_permissions
     load_service
     
@@ -302,6 +337,7 @@ main() {
         print_status "  - Virtual environment: $VENV_DIR"
         print_status "  - MLX version: Updated to 0.26.1"
         print_status "  - exo command: /usr/local/bin/exo"
+        print_status "  - exo-status command: /usr/local/bin/exo-status"
         print_status "  - Web interface: http://localhost:52415"
         print_status "  - API endpoint: http://localhost:52415/v1/chat/completions"
         print_status ""
@@ -313,6 +349,10 @@ main() {
         print_status ""
         print_status "To test exo command:"
         print_status "  exo --help"
+        print_status ""
+        print_status "To check service status:"
+        print_status "  exo-status          # Full status report"
+        print_status "  exo-status quick    # Quick status summary"
         print_status ""
         print_status "To uninstall:"
         print_status "  sudo ./scripts/uninstall_exo_service.sh"

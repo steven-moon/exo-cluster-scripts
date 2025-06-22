@@ -50,6 +50,10 @@ rm -f "$LAUNCH_AGENTS_DIR/$PLIST_FILE"
 print_status "Removing system-wide exo command..."
 rm -f /usr/local/bin/exo
 
+# Remove system-wide exo-status command
+print_status "Removing system-wide exo-status command..."
+rm -f /usr/local/bin/exo-status
+
 print_status "Removing installation directory..."
 rm -rf "$EXO_INSTALL_DIR"
 

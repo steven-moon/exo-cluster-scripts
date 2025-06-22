@@ -24,6 +24,7 @@ exo-cluster-scripts/
     ├── install_exo_service.sh          # Enhanced installation script (handles edge cases)
     ├── uninstall_exo_service.sh        # Remove exo service
     ├── start_exo.sh                    # Enhanced startup script (auto-configuration)
+    ├── check_exo_status.sh             # Status checker script
     ├── com.exolabs.exo.plist           # LaunchDaemon configuration
     └── exo_config_example.sh           # Simplified example configuration
 ```
@@ -128,7 +129,19 @@ ps aux | grep exo
 
 # View real-time logs
 tail -f /var/log/exo/exo.log
+
+# Use the exo-status command for detailed status information
+exo-status          # Full status report
+exo-status quick    # Quick status summary
 ```
+
+The `exo-status` command provides comprehensive status information including:
+- Installation status
+- Service status (loaded/running)
+- Process information (PIDs, memory, CPU usage)
+- Network status (port listening, web interface accessibility)
+- Log file status and recent entries
+- System resource usage
 
 ### Uninstall the service
 
