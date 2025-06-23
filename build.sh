@@ -143,6 +143,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --install)
             INSTALL_TO_APPLICATIONS=true
+            RUN_AFTER_BUILD=true
             shift
             ;;
         --dmg)
@@ -159,7 +160,7 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --build-only     Build the app only (default)"
             echo "  --run            Build and run the app"
-            echo "  --install        Build and install to /Applications/"
+            echo "  --install        Build, install to /Applications/, and run the app"
             echo "  --dmg            Create DMG installer"
             echo "  --launch         Launch existing app (no build)"
             echo "  --help, -h       Show this help message"
@@ -304,9 +305,6 @@ if [ "$CREATE_DMG" = true ]; then
     dmg_name="$DIST_DIR/$APP_NAME.dmg"
     hdiutil create -volname "$APP_NAME" -srcfolder "$APP_PATH" -ov -format UDZO "$dmg_name"
     print_status "✓ DMG created at $dmg_name"
-else
-    print_warning "create-dmg not found. Skipping DMG creation."
-    print_status "You can install create-dmg with: brew install create-dmg"
 fi
 
 # Create a simple zip archive
@@ -366,11 +364,11 @@ fi
 echo ""
 print_status "Next steps:"
 if [ "$INSTALL_TO_APPLICATIONS" = true ]; then
-    echo "  - App is installed at /Applications/$PRODUCT_NAME"
-    echo "  - Run with admin privileges: sudo open /Applications/$PRODUCT_NAME"
+    echo "  - App is installed at /Applications/$PRODUCT_NAME and is being launched."
+    echo "  - To run it again, open it from the Applications folder."
 else
-    echo "  - Install to Applications: $0 --install"
-    echo "  - Run the app: $0 --run"
+    echo "  - Install to Applications and run: $0 --install"
+    echo "  - Run the app from the build directory: $0 --run"
 fi
 echo "  - Create DMG installer: $0 --dmg"
 echo ""
