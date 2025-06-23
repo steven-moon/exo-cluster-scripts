@@ -41,6 +41,10 @@ STARTUP_SCRIPT="start_exo.sh"
 EXO_REPO_URL="https://github.com/exo-explore/exo.git"
 VENV_DIR="$EXO_INSTALL_DIR/venv"
 
+# Global variables for Python detection
+PYTHON_CMD=""
+PYTHON_VERSION=""
+
 print_status "Installing exo startup service..."
 
 # Function to check if exo is already installed and running
@@ -81,6 +85,252 @@ check_existing_installation() {
     fi
 }
 
+# Function to compare version numbers
+version_compare() {
+    local version1=$1
+    local version2=$2
+    local operator=$3
+    
+    # Convert versions to comparable format
+    local IFS=.
+    local i ver1=($version1) ver2=($version2)
+    
+    # Fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++)); do
+        ver1[i]=0
+    done
+    
+    # Fill empty fields in ver2 with zeros
+    for ((i=${#ver2[@]}; i<${#ver1[@]}; i++)); do
+        ver2[i]=0
+    done
+    
+    # Compare versions
+    for ((i=0; i<${#ver1[@]}; i++)); do
+        if [[ ${ver1[i]} -lt ${ver2[i]} ]]; then
+            [[ "$operator" == "<" || "$operator" == "<=" ]] && return 0 || return 1
+        elif [[ ${ver1[i]} -gt ${ver2[i]} ]]; then
+            [[ "$operator" == ">" || "$operator" == ">=" ]] && return 0 || return 1
+        fi
+    done
+    
+    # Versions are equal
+    [[ "$operator" == "=" || "$operator" == ">=" || "$operator" == "<=" ]] && return 0 || return 1
+}
+
+# Function to find best Python version
+find_python() {
+    local python_candidates=("python3.13" "python3.12" "python3.11" "python3.10" "python3")
+    local python_cmd=""
+    local python_version=""
+    
+    print_status "Searching for compatible Python version..."
+    
+    for cmd in "${python_candidates[@]}"; do
+        if command -v "$cmd" &> /dev/null; then
+            python_version=$("$cmd" --version 2>&1 | cut -d' ' -f2)
+            print_status "Found $cmd (version $python_version)"
+            
+            if version_compare "$python_version" "3.10.0" ">="; then
+                python_cmd="$cmd"
+                print_status "Using $cmd (version $python_version) - compatible with tinygrad"
+                break
+            else
+                print_warning "$cmd (version $python_version) is too old (need 3.10+ for tinygrad)"
+            fi
+        fi
+    done
+    
+    if [ -n "$python_cmd" ]; then
+        echo "$python_cmd:$python_version"
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to install Python via Homebrew
+install_python_via_homebrew() {
+    print_status "Installing Python via Homebrew..."
+    
+    # Check if Homebrew is installed
+    if ! command -v brew &> /dev/null; then
+        print_status "Homebrew not found, installing Homebrew first..."
+        if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; then
+            print_error "Failed to install Homebrew"
+            return 1
+        fi
+        
+        # Add Homebrew to PATH for current session
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            export PATH="/opt/homebrew/bin:$PATH"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            export PATH="/usr/local/bin:$PATH"
+        fi
+    fi
+    
+    # Install Python 3.12 (stable and well-supported)
+    print_status "Installing Python 3.12 via Homebrew..."
+    if brew install python@3.12; then
+        print_status "Python 3.12 installed successfully"
+        
+        # Make sure it's properly linked
+        brew link python@3.12 --force 2>/dev/null || true
+        
+        # Add Homebrew Python to PATH for current session
+        if [[ -f "/opt/homebrew/bin/python3.12" ]]; then
+            export PATH="/opt/homebrew/bin:$PATH"
+        elif [[ -f "/usr/local/bin/python3.12" ]]; then
+            export PATH="/usr/local/bin:$PATH"
+        fi
+        
+        return 0
+    else
+        print_error "Failed to install Python 3.12 via Homebrew"
+        return 1
+    fi
+}
+
+# Function to setup Python environment
+setup_python_environment() {
+    print_status "Setting up Python environment..."
+    
+    # Detect Homebrew installation path
+    local homebrew_prefix=""
+    if [[ -d "/opt/homebrew" ]]; then
+        homebrew_prefix="/opt/homebrew"
+    elif [[ -d "/usr/local" ]]; then
+        homebrew_prefix="/usr/local"
+    fi
+    
+    # Add Homebrew paths to current session
+    if [[ -n "$homebrew_prefix" ]]; then
+        export PATH="$homebrew_prefix/bin:$PATH"
+        export PATH="$homebrew_prefix/opt/python@3.12/bin:$PATH"
+        export PATH="$homebrew_prefix/opt/python@3.11/bin:$PATH"
+        export PATH="$homebrew_prefix/opt/python@3.10/bin:$PATH"
+    fi
+    
+    # Try to find Python again with updated PATH
+    python_info=$(find_python)
+    if [ $? -eq 0 ]; then
+        PYTHON_CMD=$(echo "$python_info" | cut -d':' -f1)
+        PYTHON_VERSION=$(echo "$python_info" | cut -d':' -f2)
+        print_status "Found compatible Python: $PYTHON_CMD (version $PYTHON_VERSION)"
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to check Python prerequisites
+check_python_prerequisites() {
+    print_status "Checking Python prerequisites..."
+    
+    # Check if Python environment variables are already set (from setup script)
+    if [[ -n "$EXO_PYTHON_CMD" ]] && [[ -n "$EXO_PYTHON_VERSION" ]]; then
+        print_status "Using pre-configured Python environment:"
+        PYTHON_CMD="$EXO_PYTHON_CMD"
+        PYTHON_VERSION="$EXO_PYTHON_VERSION"
+        print_status "Python command: $PYTHON_CMD"
+        print_status "Python version: $PYTHON_VERSION"
+        print_status "Python path: $EXO_PYTHON_PATH"
+    else
+        # First, try to find existing compatible Python
+        if setup_python_environment; then
+            print_status "Compatible Python found: $PYTHON_CMD (version $PYTHON_VERSION)"
+        else
+            print_warning "No compatible Python version found"
+            print_status "Attempting to install Python automatically..."
+            
+            # Try to install Python via Homebrew
+            if install_python_via_homebrew; then
+                # Try to find Python again after installation
+                if setup_python_environment; then
+                    print_status "Python installation successful: $PYTHON_CMD (version $PYTHON_VERSION)"
+                else
+                    print_error "Failed to find Python after installation"
+                    exit 1
+                fi
+            else
+                print_error "Failed to install Python automatically"
+                print_error "Please install Python 3.10+ manually or run:"
+                echo "  ./scripts/setup_python_env.sh"
+                echo "  source /tmp/exo_python_env"
+                echo "  sudo -E ./scripts/install_exo_service.sh"
+                exit 1
+            fi
+        fi
+    fi
+    
+    # Verify Python path
+    python_path=$(which "$PYTHON_CMD")
+    print_status "Python path: $python_path"
+    
+    # Check if we can create virtual environments
+    if ! "$PYTHON_CMD" -m venv --help > /dev/null 2>&1; then
+        print_error "Python virtual environment support is not available for $PYTHON_CMD"
+        print_error "Try installing python3-venv package or use a different Python installation"
+        exit 1
+    fi
+    
+    # Check if pip is available
+    if ! "$PYTHON_CMD" -m pip --version > /dev/null 2>&1; then
+        print_error "pip is not available for $PYTHON_CMD"
+        print_error "Try installing python3-pip package"
+        exit 1
+    fi
+    
+    print_status "Python prerequisites check passed"
+}
+
+# Function to test key dependencies before full installation
+test_dependencies() {
+    print_status "Testing key dependencies before installation..."
+    
+    # Create a temporary virtual environment to test dependencies
+    local temp_venv="/tmp/exo_dep_test_$$"
+    
+    if "$PYTHON_CMD" -m venv "$temp_venv"; then
+        print_status "Created temporary test environment"
+        
+        # Activate the temporary environment
+        source "$temp_venv/bin/activate"
+        
+        # Upgrade pip
+        pip install --quiet --upgrade pip
+        
+        # Test tinygrad (the main problematic dependency)
+        print_status "Testing tinygrad installation..."
+        if pip install --quiet "tinygrad==0.10.0" > /dev/null 2>&1; then
+            print_status "✓ tinygrad can be installed successfully"
+        else
+            print_error "✗ tinygrad installation failed"
+            print_error "This is usually due to Python version incompatibility"
+            deactivate
+            rm -rf "$temp_venv"
+            exit 1
+        fi
+        
+        # Test MLX if on Apple Silicon
+        if [[ $(uname -m) == "arm64" ]]; then
+            print_status "Testing MLX installation on Apple Silicon..."
+            if pip install --quiet "mlx==0.26.1" > /dev/null 2>&1; then
+                print_status "✓ MLX can be installed successfully"
+            else
+                print_warning "⚠ MLX installation failed - Apple Silicon features may not work optimally"
+            fi
+        fi
+        
+        deactivate
+        rm -rf "$temp_venv"
+        print_status "Dependency test completed successfully"
+    else
+        print_error "Failed to create temporary test environment"
+        exit 1
+    fi
+}
+
 # Function to create directories with proper permissions
 create_directories() {
     print_status "Creating installation directory: $EXO_INSTALL_DIR"
@@ -106,19 +356,36 @@ setup_exo_repository() {
     if [ -d "$EXO_INSTALL_DIR/.git" ]; then
         print_status "exo repository already exists, updating..."
         cd "$EXO_INSTALL_DIR"
-        git fetch origin
+        
+        if ! git fetch origin; then
+            print_error "Failed to fetch updates from repository"
+            print_error "Check your internet connection"
+            exit 1
+        fi
+        
         git reset --hard origin/main
     elif [ -d "$EXO_INSTALL_DIR" ]; then
         print_warning "Directory $EXO_INSTALL_DIR exists but is not a git repository"
         print_status "Removing existing directory and cloning fresh repository..."
         rm -rf "$EXO_INSTALL_DIR"
-        git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"
+        
+        if ! git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"; then
+            print_error "Failed to clone exo repository"
+            print_error "Check your internet connection and GitHub access"
+            exit 1
+        fi
     else
         print_status "Cloning exo repository from GitHub..."
-        git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"
+        
+        if ! git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"; then
+            print_error "Failed to clone exo repository"
+            print_error "Check your internet connection and GitHub access"
+            exit 1
+        fi
     fi
     
     cd "$EXO_INSTALL_DIR"
+    print_status "Repository setup completed successfully"
 }
 
 # Function to configure MLX
@@ -155,8 +422,8 @@ configure_mlx() {
 # Function to setup virtual environment
 setup_virtual_environment() {
     if [ ! -d "$VENV_DIR" ]; then
-        print_status "Creating Python virtual environment..."
-        python3 -m venv "$VENV_DIR"
+        print_status "Creating Python virtual environment using $PYTHON_CMD..."
+        "$PYTHON_CMD" -m venv "$VENV_DIR"
     else
         print_status "Virtual environment already exists"
     fi
@@ -165,18 +432,33 @@ setup_virtual_environment() {
     source "$VENV_DIR/bin/activate"
     
     # Upgrade pip in virtual environment
+    print_status "Upgrading pip..."
     pip install --upgrade pip
     
     # Fix numpy compatibility issue with Python 3.13
-    python_version=$(python3 --version 2>&1 | cut -d' ' -f2)
-    if [[ "$python_version" == 3.13* ]]; then
-        print_status "Detected Python 3.13, installing compatible numpy version..."
+    if version_compare "$PYTHON_VERSION" "3.13.0" ">="; then
+        print_status "Detected Python 3.13+, installing compatible numpy version..."
         pip install "numpy<2.0.0"
     fi
     
-    # Install exo in development mode
+    # Install exo in development mode with better error handling
     print_status "Installing exo using pip install -e ."
-    pip install -e .
+    if ! pip install -e .; then
+        print_error "Failed to install exo"
+        print_error "Check the error messages above for details"
+        deactivate
+        exit 1
+    fi
+    
+    print_status "Verifying exo installation..."
+    if ! python -c "import exo" 2>/dev/null; then
+        print_error "exo installation verification failed"
+        deactivate
+        exit 1
+    fi
+    
+    deactivate
+    print_status "Virtual environment setup completed successfully"
 }
 
 # Function to install startup scripts
@@ -320,6 +602,12 @@ create_exo_status_command() {
 
 # Main installation process
 main() {
+    print_status "Starting exo installation process..."
+    
+    # Check prerequisites first
+    check_python_prerequisites
+    test_dependencies
+    
     check_existing_installation
     create_directories
     setup_exo_repository
@@ -339,6 +627,7 @@ main() {
         print_status "  - exo repository: $EXO_REPO_URL"
         print_status "  - Installation directory: $EXO_INSTALL_DIR"
         print_status "  - Virtual environment: $VENV_DIR"
+        print_status "  - Python version: $PYTHON_CMD ($PYTHON_VERSION)"
         print_status "  - MLX version: Updated to 0.26.1"
         print_status "  - exo command: /usr/local/bin/exo"
         print_status "  - exo-status command: /usr/local/bin/exo-status"

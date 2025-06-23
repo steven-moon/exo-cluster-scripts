@@ -36,11 +36,18 @@ is_exo_running() {
 
 # Function to find exo executable
 find_exo_executable() {
-    # Check virtual environment first
+    # Check virtual environment first (preferred method)
     local venv_exo="/opt/exo/venv/bin/exo"
     if [ -x "$venv_exo" ]; then
+        log_message "Found exo in virtual environment: $venv_exo"
         echo "$venv_exo"
         return 0
+    fi
+    
+    # Check if virtual environment exists but exo is missing
+    if [ -d "/opt/exo/venv" ] && [ ! -x "$venv_exo" ]; then
+        log_message "Virtual environment exists but exo executable is missing"
+        log_message "This indicates an installation problem"
     fi
     
     # Check common locations for exo executable
@@ -53,6 +60,7 @@ find_exo_executable() {
     
     for path in "${exo_paths[@]}"; do
         if [ -x "$path" ]; then
+            log_message "Found exo at: $path"
             echo "$path"
             return 0
         fi
@@ -61,10 +69,12 @@ find_exo_executable() {
     # Try to find exo in PATH
     local exo_in_path=$(which exo 2>/dev/null)
     if [ -n "$exo_in_path" ]; then
+        log_message "Found exo in PATH: $exo_in_path"
         echo "$exo_in_path"
         return 0
     fi
     
+    log_message "No exo executable found in any expected location"
     return 1
 }
 
