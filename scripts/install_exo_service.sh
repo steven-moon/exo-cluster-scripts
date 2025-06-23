@@ -118,25 +118,19 @@ version_compare() {
     [[ "$operator" == "=" || "$operator" == ">=" || "$operator" == "<=" ]] && return 0 || return 1
 }
 
-# Function to find best Python version
+# Function to find best Python version (silent - no output)
 find_python() {
     local python_candidates=("python3.13" "python3.12" "python3.11" "python3.10" "python3")
     local python_cmd=""
     local python_version=""
     
-    print_status "Searching for compatible Python version..."
-    
     for cmd in "${python_candidates[@]}"; do
         if command -v "$cmd" &> /dev/null; then
             python_version=$("$cmd" --version 2>&1 | cut -d' ' -f2)
-            print_status "Found $cmd (version $python_version)"
             
             if version_compare "$python_version" "3.10.0" ">="; then
                 python_cmd="$cmd"
-                print_status "Using $cmd (version $python_version) - compatible with tinygrad"
                 break
-            else
-                print_warning "$cmd (version $python_version) is too old (need 3.10+ for tinygrad)"
             fi
         fi
     done
@@ -193,8 +187,6 @@ install_python_via_homebrew() {
 
 # Function to setup Python environment
 setup_python_environment() {
-    print_status "Setting up Python environment..."
-    
     # Detect Homebrew installation path
     local homebrew_prefix=""
     if [[ -d "/opt/homebrew" ]]; then
@@ -216,7 +208,6 @@ setup_python_environment() {
     if [ $? -eq 0 ]; then
         PYTHON_CMD=$(echo "$python_info" | cut -d':' -f1)
         PYTHON_VERSION=$(echo "$python_info" | cut -d':' -f2)
-        print_status "Found compatible Python: $PYTHON_CMD (version $PYTHON_VERSION)"
         return 0
     else
         return 1
@@ -237,8 +228,9 @@ check_python_prerequisites() {
         print_status "Python path: $EXO_PYTHON_PATH"
     else
         # First, try to find existing compatible Python
+        print_status "Searching for compatible Python installation..."
         if setup_python_environment; then
-            print_status "Compatible Python found: $PYTHON_CMD (version $PYTHON_VERSION)"
+            print_status "Found compatible Python: $PYTHON_CMD (version $PYTHON_VERSION)"
         else
             print_warning "No compatible Python version found"
             print_status "Attempting to install Python automatically..."
