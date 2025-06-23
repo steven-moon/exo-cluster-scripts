@@ -1,384 +1,156 @@
-# Exo Cluster Scripts & ExoManager
+# exo-cluster-scripts
 
-A comprehensive solution for managing the Exo AI cluster server on macOS, including installation scripts and a native macOS management application.
+Automated startup scripts for running the [exo](https://github.com/exo-explore/exo) LLM cluster on macOS. This repository provides a single script to install and configure exo as a system service that automatically starts on boot.
 
-## Overview
+## What is exo?
 
-This repository contains:
+[exo](https://github.com/exo-explore/exo) is an open-source framework that allows you to run your own AI cluster at home using everyday devices. It unifies your existing devices into one powerful GPU, enabling distributed inference across multiple machines.
 
-1. **Shell Scripts**: Automated installation, configuration, and management scripts for the Exo AI cluster
-2. **ExoManager**: A native macOS application providing a modern GUI for managing Exo services
+Key features:
+- **Device Equality**: P2P architecture without a master-worker hierarchy.
+- **Heterogeneous Support**: Works across different device types (Mac, Linux, etc.).
+- **Multiple Inference Engines**: Supports MLX, tinygrad, and more.
+- **Automatic Discovery**: Devices automatically find each other on the network.
+- **Web UI**: Built-in ChatGPT-like interface at `http://localhost:52415`.
+- **API Compatible**: Offers a ChatGPT-compatible API endpoint for integration.
 
-## Features
+## Prerequisites
 
-### Shell Scripts
-- **Automated Installation**: One-command installation of Exo as a system service
-- **Service Management**: Start, stop, restart, and status checking
-- **Configuration Management**: Environment-based configuration system
-- **Logging**: Comprehensive logging and monitoring
-- **Uninstallation**: Clean removal of all components
-
-### ExoManager macOS App
-- **Service Management**: Install, uninstall, start, stop, and restart Exo services
-- **Real-time Monitoring**: CPU, memory, disk, and GPU usage tracking
-- **Network Discovery**: Find and manage other Exo nodes on the network
-- **Embedded Chat Interface**: Access the Exo web interface directly in the app
-- **Log Management**: Real-time log viewing with filtering and export
-- **Performance Controls**: Adjust throttling settings for optimal performance
-- **Configuration Management**: User-friendly settings interface
-- **Dashboard**: Overview of system status and quick actions
-
-## Real-Time Debugging with MCP Server
-
-ExoManager includes a built-in MCP (Model Context Protocol) server that streams real-time debug information, logs, and performance metrics to Cursor IDE or any other client.
-
-### Features
-
-- **Real-time Log Streaming**: Live log entries from the Exo service
-- **Performance Metrics**: CPU, memory, disk, and GPU usage
-- **Service Status**: Installation, running status, and error messages
-- **Network Discovery**: Node discovery and cluster information
-- **Debug Messages**: Custom debug messages from different components
-
-### Using the MCP Client
-
-#### Quick Start
-
-1. **Start ExoManager** (the MCP server starts automatically)
-2. **Run the MCP client** in Cursor IDE:
-   ```bash
-   ./scripts/start_mcp_client.sh
-   ```
-
-#### Manual Client Usage
-
-```bash
-# Connect to local ExoManager
-python3 scripts/exo_mcp_client.py
-
-# Connect to remote ExoManager
-python3 scripts/exo_mcp_client.py --host 192.168.1.100 --port 52417
-
-# Get help
-./scripts/start_mcp_client.sh --help
-```
-
-#### Client Features
-
-- **Colored Output**: Different colors for errors, warnings, and info messages
-- **Real-time Updates**: Live streaming of all debug information
-- **Statistics**: Message counts and performance averages
-- **Easy Quit**: Press 'q' and Enter to disconnect
-
-### MCP Server Details
-
-- **Port**: 52417 (configurable)
-- **Protocol**: TCP with JSON messages
-- **Auto-start**: Server starts automatically when ExoManager launches
-- **Multiple Clients**: Supports multiple simultaneous connections
-
-### Message Types
-
-| Type | Description | Frequency |
-|------|-------------|-----------|
-| `welcome` | Server connection info | On connect |
-| `log_entry` | Exo service logs | Real-time |
-| `performance_metrics` | System performance | Every 2 seconds |
-| `service_status` | Service state | Every 5 seconds |
-| `network_discovery` | Network nodes | Every 10 seconds |
-| `debug_message` | Custom debug info | On events |
-
-### Integration with Cursor IDE
-
-The MCP client provides real-time debugging information that appears directly in your Cursor IDE terminal, making it easy to:
-
-- Monitor Exo service installation and startup
-- Debug performance issues
-- Track network discovery
-- View live logs without switching applications
-- Get immediate feedback on service operations
-
-### Example Output
-
-```
-🎉 Connected to ExoManager MCP Server v1.0.0
-   📋 Capabilities: logs, performance, service_status, network_discovery
-------------------------------------------------------------
-🔍 [14:30:15] [app] ExoManager app started
-📊 [14:30:16] CPU: 45.2% | Memory: 67.8% | Disk: 23.1% | GPU: 12.4%
-   🌐 Network: Connected | Web: 🟢 | API: 🟢
-🔧 [14:30:17] Service: ⚪ Not Installed
-🔍 [14:30:18] [service_manager] Starting Exo service installation
-❌ [14:30:19] [ERROR] Installation failed: Permission denied
-```
+- **macOS**: Tested on macOS 14+ (Sonoma or later).
+- **Python 3.10+**: The installer can automatically install Python using Homebrew if needed.
+- **Root Access**: Required for system service installation. `sudo` will be requested.
+- **Network Access**: For downloading the exo repository and required models.
+- **Git & Curl**: Standard command-line tools that should be pre-installed on macOS.
 
 ## Quick Start
 
-### Using Shell Scripts
+The installation has been streamlined into a single script.
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/your-username/exo-cluster-scripts.git
-   cd exo-cluster-scripts
-   ```
+1.  **Clone this repository:**
+    ```bash
+    git clone https://github.com/exo-explore/exo-cluster-scripts.git
+    cd exo-cluster-scripts
+    ```
 
-2. **Install Exo**:
-   ```bash
-   sudo ./scripts/install_exo_service.sh
-   ```
+2.  **Run the automated installer:**
+    ```bash
+    ./install_exo_auto.sh
+    ```
 
-3. **Check status**:
-   ```bash
-   ./scripts/check_exo_status.sh
-   ```
+This script will handle everything:
+- It checks for a compatible Python version and offers to install it with Homebrew if one isn't found.
+- It asks for `sudo` permission upfront.
+- It clones the `exo` repository into `/opt/exo`.
+- It creates a self-contained Python virtual environment.
+- It installs `exo` and its dependencies.
+- It configures `exo` as a `launchd` service to run automatically on system boot.
+- It creates system-wide commands (`exo` and `exo-status`) for easy access.
 
-4. **Start/stop service**:
-   ```bash
-   sudo launchctl load /Library/LaunchDaemons/com.exolabs.exo.plist
-   sudo launchctl unload /Library/LaunchDaemons/com.exolabs.exo.plist
-   ```
+## Repository Structure
 
-### Using ExoManager App
-
-**Quick Start (Recommended)**:
-```bash
-# Build and install to Applications
-./build.sh --install
-
-# Launch with administrator privileges
-./build.sh --launch
+```
+exo-cluster-scripts/
+├── README.md                     # This documentation
+├── install_exo_auto.sh           # Single, automated installation script
+├── validate_project.sh           # Script to validate the project setup
+└── scripts/
+    ├── utils.sh                  # Shared utility functions for scripts
+    ├── start_exo.sh              # Startup script run by the system service
+    ├── check_exo_status.sh       # Powers the 'exo-status' command
+    ├── uninstall_exo_service.sh  # Removes the exo service and all files
+    ├── com.exolabs.exo.plist     # launchd service configuration
+    └── exo_config_example.sh     # Example configuration file
 ```
 
-**Alternative Options**:
+## Service Management
+
+You can manage the `exo` service using the standard `launchctl` commands or the provided `exo-status` helper.
+
+### Check Service Status
+
+The easiest way to check on `exo` is with the `exo-status` command.
+
 ```bash
-# Build and run immediately
-./build.sh --run
+# Quick status summary
+exo-status
 
-# Build only
-./build.sh
-
-# Create DMG installer
-./build.sh --dmg
-
-# Launch existing app (no build)
-./build.sh --launch
+# Detailed status report
+exo-status full
 ```
 
-**Note**: ExoManager requires administrator privileges to install and manage system services. If the app freezes during installation, it's likely a privilege escalation issue. Use one of the methods above to run with proper privileges.
+The status command provides comprehensive information, including:
+- Installation and service status (loaded/running).
+- Process information and resource usage.
+- Web interface accessibility.
+- Recent log entries and errors.
 
-## Requirements
-
-### System Requirements
-- macOS 14.0 or later
-- Administrator privileges (for service installation)
-- Xcode command line tools (for building ExoManager)
-
-### Dependencies
-- Python 3.8+ (for Exo)
-- Git (for repository cloning)
-- Homebrew (optional, for additional tools)
-
-## Installation
-
-### Shell Scripts Only
-
-If you only want to use the shell scripts:
+### Start, Stop, and Restart
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/exo-cluster-scripts.git
-cd exo-cluster-scripts
+# Start the service
+sudo launchctl start com.exolabs.exo
 
-# Make scripts executable
-chmod +x scripts/*.sh
+# Stop the service
+sudo launchctl stop com.exolabs.exo
 
-# Install Exo service
-sudo ./scripts/install_exo_service.sh
+# Restart the service
+sudo launchctl stop com.exolabs.exo && sudo launchctl start com.exolabs.exo
 ```
 
-### ExoManager App
-
-To build and install the ExoManager app:
+### View Logs
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/exo-cluster-scripts.git
-cd exo-cluster-scripts
-
-# Build the app
-./build.sh
-
-# Install the app
-cd dist
-./install.sh
+# View real-time logs
+tail -f /var/log/exo/exo.log
 ```
 
 ## Configuration
 
-### Shell Scripts Configuration
+To customize your `exo` installation, you can create a configuration file.
 
-Edit `/opt/exo/scripts/exo_config.sh` to customize Exo settings:
+1.  **Copy the example configuration:**
+    ```bash
+    sudo cp /opt/exo/scripts/exo_config_example.sh /opt/exo/scripts/exo_config.sh
+    ```
 
-```bash
-# Basic configuration
-export EXO_HOME="/opt/exo/.cache/exo"
-export HF_ENDPOINT="https://huggingface.co"
-export DEBUG=0
+2.  **Edit the configuration file:**
+    ```bash
+    sudo nano /opt/exo/scripts/exo_config.sh
+    ```
+    Uncomment and modify the settings you need.
 
-# Network configuration
-export EXO_DISCOVERY_MODULE="udp"
-export EXO_WEB_PORT="52415"
-export EXO_WEB_HOST="0.0.0.0"
+3.  **Restart the service for changes to take effect:**
+    ```bash
+    sudo launchctl restart com.exolabs.exo
+    ```
 
-# Performance configuration
-export EXO_GPU_MEMORY_FRACTION="0.9"
-export EXO_DEFAULT_MODEL="llama-3.2-3b"
-```
+## Uninstalling the Service
 
-### ExoManager Configuration
-
-All configuration is managed through the app's Settings interface:
-
-1. Launch ExoManager
-2. Go to Settings (⌘,)
-3. Configure settings in the appropriate tabs:
-   - **Basic**: Installation directory, debug level
-   - **Network**: Discovery settings, web interface
-   - **Performance**: GPU memory, throttling controls
-   - **Advanced**: Command line arguments, debugging
-
-## Usage
-
-### Shell Scripts
-
-| Script | Purpose |
-|--------|---------|
-| `install_exo_service.sh` | Install Exo as a system service |
-| `uninstall_exo_service.sh` | Remove Exo service and files |
-| `start_exo.sh` | Start the Exo service |
-| `check_exo_status.sh` | Check service status and health |
-| `exo_config_example.sh` | Example configuration file |
-
-### ExoManager App
-
-#### Dashboard
-- Monitor service status and system resources
-- Quick actions for common tasks
-- Network health overview
-
-#### Chat
-- Embedded web interface for Exo chat
-- Navigation controls and error handling
-- Direct access to Exo API
-
-#### Performance
-- Real-time charts for CPU, memory, disk, and GPU
-- Historical data with selectable time ranges
-- Performance metrics and statistics
-
-#### Network
-- Discover other Exo nodes on the network
-- Node details and cluster information
-- Network health monitoring
-
-#### Logs
-- Real-time log viewing
-- Filtering by log level and search terms
-- Export logs in various formats
-
-#### Throttle
-- Adjust CPU, GPU, and memory limits
-- Performance presets (Performance, Balanced, Power Saving)
-- Real-time throttling controls
-
-#### Settings
-- Comprehensive configuration management
-- Tabbed interface for different setting categories
-- Save and apply configuration changes
-
-## Troubleshooting
-
-### Common Issues
-
-#### Service Won't Start
-1. Check logs: `tail -f /var/log/exo/exo.log`
-2. Verify installation: `./scripts/check_exo_status.sh`
-3. Check permissions: Ensure scripts are executable
-4. Verify dependencies: Python, Git, etc.
-
-#### Network Discovery Issues
-1. Check firewall settings for UDP port 52415
-2. Verify network connectivity between nodes
-3. Review discovery module configuration
-
-#### Performance Issues
-1. Adjust GPU memory fraction in settings
-2. Monitor system resources in Performance tab
-3. Use throttling controls to limit resource usage
-
-#### ExoManager Build Issues
-1. Ensure Xcode command line tools are installed
-2. Check macOS version compatibility
-3. Verify all source files are present
-
-### Getting Help
-
-1. **Check the logs**: Use the Logs tab in ExoManager or view `/var/log/exo/exo.log`
-2. **Review configuration**: Verify settings in the Settings tab
-3. **Check system status**: Use the Dashboard for an overview
-4. **Consult documentation**: Review Exo documentation at https://github.com/exo-explore/exo
-
-## Development
-
-### Building ExoManager
+To completely remove the `exo` service and all related files from your system, run the uninstaller script located in the installation directory.
 
 ```bash
-# Install dependencies
-xcode-select --install
-
-# Build the app
-./build.sh
-
-# Development build (for testing)
-xcodebuild -project ExoManager.xcodeproj -scheme ExoManager -configuration Debug build
+sudo /opt/exo/scripts/uninstall_exo_service.sh
 ```
 
-### Project Structure
+## ExoManager GUI
 
-```
-exo-cluster-scripts/
-├── scripts/                    # Shell scripts for Exo management
-│   ├── install_exo_service.sh
-│   ├── uninstall_exo_service.sh
-│   ├── start_exo.sh
-│   ├── check_exo_status.sh
-│   └── exo_config_example.sh
-├── ExoManager/                 # macOS app source code
-│   ├── ExoManagerApp.swift     # App entry point
-│   ├── ContentView.swift       # Main content view
-│   ├── Models/                 # Data models and managers
-│   ├── Views/                  # SwiftUI views
-│   ├── Assets.xcassets/        # App assets
-│   └── Info.plist             # App configuration
-├── ExoManager.xcodeproj/       # Xcode project
-├── build.sh                   # Build script
-└── README.md                  # This file
+This repository also contains the project files for `ExoManager`, a native macOS GUI application for managing the `exo` service. You can build and run it from Xcode or using the included `build.sh` script.
+
+```bash
+# Build the app and install it to /Applications
+./build.sh --install
 ```
 
-### Contributing
+## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+Contributions are welcome! Please feel free to fork the repository, make changes, and submit a pull request.
+
+1.  Fork this repository.
+2.  Create a feature branch.
+3.  Make your changes.
+4.  Test thoroughly using `validate_project.sh`.
+5.  Submit a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [Exo AI](https://github.com/exo-explore/exo) - The AI cluster server
-- [SwiftUI](https://developer.apple.com/xcode/swiftui/) - Modern UI framework
-- [Network Framework](https://developer.apple.com/documentation/network) - Network discovery
+This project is licensed under the GPL-3.0 License, the same as the `exo` framework itself.

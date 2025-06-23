@@ -36,11 +36,18 @@ is_exo_running() {
 
 # Function to find exo executable
 find_exo_executable() {
-    # Check virtual environment first
+    # Check virtual environment first (preferred method)
     local venv_exo="/opt/exo/venv/bin/exo"
     if [ -x "$venv_exo" ]; then
+        log_message "Found exo in virtual environment: $venv_exo"
         echo "$venv_exo"
         return 0
+    fi
+    
+    # Check if virtual environment exists but exo is missing
+    if [ -d "/opt/exo/venv" ] && [ ! -x "$venv_exo" ]; then
+        log_message "Virtual environment exists but exo executable is missing"
+        log_message "This indicates an installation problem"
     fi
     
     # Check common locations for exo executable
@@ -53,6 +60,7 @@ find_exo_executable() {
     
     for path in "${exo_paths[@]}"; do
         if [ -x "$path" ]; then
+            log_message "Found exo at: $path"
             echo "$path"
             return 0
         fi
@@ -61,10 +69,12 @@ find_exo_executable() {
     # Try to find exo in PATH
     local exo_in_path=$(which exo 2>/dev/null)
     if [ -n "$exo_in_path" ]; then
+        log_message "Found exo in PATH: $exo_in_path"
         echo "$exo_in_path"
         return 0
     fi
     
+    log_message "No exo executable found in any expected location"
     return 1
 }
 
@@ -104,6 +114,16 @@ start_exo() {
     # Create exo home directory if it doesn't exist
     mkdir -p "$EXO_HOME"
     
+    # Set HuggingFace cache directory to match EXO_HOME
+    export HF_HOME="$EXO_HOME"
+    export TRANSFORMERS_CACHE="$EXO_HOME/transformers"
+    export HF_DATASETS_CACHE="$EXO_HOME/datasets"
+    
+    # Create cache subdirectories
+    mkdir -p "$EXO_HOME/transformers"
+    mkdir -p "$EXO_HOME/datasets"
+    mkdir -p "$EXO_HOME/downloads"
+    
     # Change to exo directory for better compatibility
     cd /opt/exo
     
@@ -125,14 +145,9 @@ start_exo() {
         exo_cmd="$exo_cmd --manual-peers $EXO_MANUAL_PEERS"
     fi
     
-    # Add web interface configuration
-    if [ -n "$EXO_WEB_PORT" ]; then
-        exo_cmd="$exo_cmd --port $EXO_WEB_PORT"
-    fi
-    
-    if [ -n "$EXO_WEB_HOST" ]; then
-        exo_cmd="$exo_cmd --host $EXO_WEB_HOST"
-    fi
+    # Add ChatGPT API port (web interface) - default to 52415
+    local web_port="${EXO_WEB_PORT:-52415}"
+    exo_cmd="$exo_cmd --chatgpt-api-port $web_port"
     
     # Add GPU memory fraction if specified
     if [ -n "$EXO_GPU_MEMORY_FRACTION" ]; then
