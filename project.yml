@@ -1,0 +1,40 @@
+name: ExoManager
+options:
+  bundleIdPrefix: com.exolabs
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "15.0"
+
+targets:
+  ExoManager:
+    type: application
+    platform: macOS
+    sources:
+      - ExoManager
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.exolabs.exomanager
+      MACOSX_DEPLOYMENT_TARGET: "14.0"
+      SWIFT_VERSION: "5.0"
+      DEVELOPMENT_TEAM: ""
+    info:
+      path: ExoManager/Info.plist
+      properties:
+        CFBundleName: ExoManager
+        CFBundleDisplayName: ExoManager
+        CFBundleIdentifier: com.exolabs.exomanager
+        CFBundleVersion: "1.0"
+        CFBundleShortVersionString: "1.0"
+        LSMinimumSystemVersion: "14.0"
+        NSHighResolutionCapable: true
+        NSRequiresAquaSystemAppearance: false
+        LSApplicationCategoryType: public.app-category.developer-tools
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: true
+        NSAppleEventsUsageDescription: "ExoManager needs to control system services to manage the exo AI cluster."
+        NSSystemAdministrationUsageDescription: "ExoManager needs administrator privileges to install and manage system services."
+    dependencies:
+      - framework: Foundation.framework
+      - framework: SwiftUI.framework
+      - framework: Network.framework
+      - framework: SystemConfiguration.framework
+      - framework: Charts.framework 

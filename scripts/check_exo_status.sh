@@ -70,12 +70,12 @@ check_installation() {
 check_service() {
     print_header "Service Status"
     
-    # Check if service is loaded (use sudo since service is loaded as root)
-    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
+    # Check if service is loaded (script must be run as root)
+    if launchctl list | grep -q "$SERVICE_NAME"; then
         print_status "✓ Service is loaded in launchctl"
         
         # Check if service is running (any non-zero PID means it's running)
-        local service_pid=$(sudo launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
+        local service_pid=$(launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
         if [ "$service_pid" != "0" ] && [ "$service_pid" != "-" ]; then
             print_status "✓ Service is running (PID: $service_pid)"
         else
@@ -203,9 +203,9 @@ check_resources() {
 show_quick_status() {
     local status=""
     
-    # Check if service is loaded and running (use sudo since service is loaded as root)
-    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
-        local service_pid=$(sudo launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
+    # Check if service is loaded and running (script must be run as root)
+    if launchctl list | grep -q "$SERVICE_NAME"; then
+        local service_pid=$(launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
         if [ "$service_pid" != "0" ] && [ "$service_pid" != "-" ]; then
             status="${GREEN}RUNNING${NC}"
         else

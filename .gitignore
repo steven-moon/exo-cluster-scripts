@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Build generated
+build/
+dist/
+DerivedData/
+.swiftpm/
+
+# Xcode
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/
+# Exclude all schemes
+*.xcuserdatad/
+
+# Swift Package Manager
+Packages/
+.package.resolved
+.build/
+
+# Carthage
+Carthage/Build
+Carthage/Checkouts
+
+# Cocoapods
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/test_output
+
+# Temp
+*~
+*.swp
+*.swo 

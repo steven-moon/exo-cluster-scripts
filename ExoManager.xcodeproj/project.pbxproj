@@ -1,0 +1,388 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		053D2D08C43247DC0393A063 /* ExoThrottleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A12EA79392078F79F91832 /* ExoThrottleView.swift */; };
+		1C10FC4C8901F51FF4B8BB37 /* ExoNetworkDiscovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F197894B63CBE8FB82B82C7 /* ExoNetworkDiscovery.swift */; };
+		3D4E5B80858139A45A1FC511 /* ExoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46BAEB607504EC1536245CEF /* ExoSettingsView.swift */; };
+		40BA38771E7452303CBF6CAD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05E1DFC20FE000AC373D4C /* ContentView.swift */; };
+		435BA565EEF6548445B313A8 /* ExoManagerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F7192EC585CDF690EB59830 /* ExoManagerApp.swift */; };
+		624727D2F765142DC11C99F2 /* ExoLogViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133CDC73B15FABE20F78FDAC /* ExoLogViewer.swift */; };
+		642E46E7AF57E5C0306644F6 /* ExoWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EFB966DB6CF2A924105941 /* ExoWebView.swift */; };
+		76E5DE0239FB8EC88A60D8E2 /* ExoPerformanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE94ACAADC460E72C0ED1193 /* ExoPerformanceView.swift */; };
+		84DEA561281B1F2F30120690 /* ExoServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281CFD7F9DD072852615BA49 /* ExoServiceManager.swift */; };
+		92333F02CCA2344E21290B93 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C310B470F98027CD18FD105 /* Assets.xcassets */; };
+		AFF73E2371861A07437ADFEF /* ExoSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBF2E360A8B7D89F7CCCCF0 /* ExoSettings.swift */; };
+		DC5ACC8D222F7DE7202F87E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD5F6E47391386B17F2395BB /* Preview Assets.xcassets */; };
+		F5A35DE62A6168BAA3D0ACCC /* ExoMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A5903473F9140A9BAC77F6 /* ExoMonitor.swift */; };
+		FA7F67FBD970B9D35D0FB9AF /* ExoNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84275CE6051186A409F96AA7 /* ExoNetworkView.swift */; };
+		B8C9D1E2F4A5B6C7D8E9F0A1 /* ExoMCPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6G7H8I9J0K1 /* ExoMCPServer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		133CDC73B15FABE20F78FDAC /* ExoLogViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoLogViewer.swift; sourceTree = "<group>"; };
+		281CFD7F9DD072852615BA49 /* ExoServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoServiceManager.swift; sourceTree = "<group>"; };
+		2C310B470F98027CD18FD105 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		372704F41D9F791A0A200372 /* ExoManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExoManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BBF2E360A8B7D89F7CCCCF0 /* ExoSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoSettings.swift; sourceTree = "<group>"; };
+		46BAEB607504EC1536245CEF /* ExoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoSettingsView.swift; sourceTree = "<group>"; };
+		4F197894B63CBE8FB82B82C7 /* ExoNetworkDiscovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoNetworkDiscovery.swift; sourceTree = "<group>"; };
+		568891FABBAC2992DE6CE87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		58EFB966DB6CF2A924105941 /* ExoWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoWebView.swift; sourceTree = "<group>"; };
+		7F7192EC585CDF690EB59830 /* ExoManagerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoManagerApp.swift; sourceTree = "<group>"; };
+		84275CE6051186A409F96AA7 /* ExoNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoNetworkView.swift; sourceTree = "<group>"; };
+		9C05E1DFC20FE000AC373D4C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6G7H8I9J0K1 /* ExoMCPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoMCPServer.swift; sourceTree = "<group>"; };
+		C7A12EA79392078F79F91832 /* ExoThrottleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoThrottleView.swift; sourceTree = "<group>"; };
+		DD5F6E47391386B17F2395BB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DE94ACAADC460E72C0ED1193 /* ExoPerformanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoPerformanceView.swift; sourceTree = "<group>"; };
+		F1A5903473F9140A9BAC77F6 /* ExoMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExoMonitor.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		77B173C29A646A49D5A3FD91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		356445BF7A79E1A75F620564 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DD5F6E47391386B17F2395BB /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9933D9A273DAC58D92FC92AC /* ExoManager */ = {
+			isa = PBXGroup;
+			children = (
+				2C310B470F98027CD18FD105 /* Assets.xcassets */,
+				9C05E1DFC20FE000AC373D4C /* ContentView.swift */,
+				133CDC73B15FABE20F78FDAC /* ExoLogViewer.swift */,
+				2E35E9F2ABFE96D11B175293 /* ExoManager.xcodeproj */,
+				7F7192EC585CDF690EB59830 /* ExoManagerApp.swift */,
+				F1A5903473F9140A9BAC77F6 /* ExoMonitor.swift */,
+				4F197894B63CBE8FB82B82C7 /* ExoNetworkDiscovery.swift */,
+				84275CE6051186A409F96AA7 /* ExoNetworkView.swift */,
+				DE94ACAADC460E72C0ED1193 /* ExoPerformanceView.swift */,
+				281CFD7F9DD072852615BA49 /* ExoServiceManager.swift */,
+				3BBF2E360A8B7D89F7CCCCF0 /* ExoSettings.swift */,
+				46BAEB607504EC1536245CEF /* ExoSettingsView.swift */,
+				C7A12EA79392078F79F91832 /* ExoThrottleView.swift */,
+				58EFB966DB6CF2A924105941 /* ExoWebView.swift */,
+				A1B2C3D4E5F6G7H8I9J0K1 /* ExoMCPServer.swift */,
+				568891FABBAC2992DE6CE87E /* Info.plist */,
+				4C3E44A0BCB13DD0010AFCFA /* README.md */,
+				356445BF7A79E1A75F620564 /* Preview Content */,
+			);
+			path = ExoManager;
+			sourceTree = "<group>";
+		};
+		A54118A4951108AEAE7BFFA6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				372704F41D9F791A0A200372 /* ExoManager.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE396A1C673D0DB334F012D6 = {
+			isa = PBXGroup;
+			children = (
+				9933D9A273DAC58D92FC92AC /* ExoManager */,
+				A54118A4951108AEAE7BFFA6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		95DA96397186ABCBCA4A9E49 /* ExoManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 925D1EE74B7EC64BC50B3E19 /* Build configuration list for PBXNativeTarget "ExoManager" */;
+			buildPhases = (
+				72310275C158F558C7B7093A /* Sources */,
+				921DBDD750D1EDAA687034C1 /* Resources */,
+				77B173C29A646A49D5A3FD91 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ExoManager;
+			packageProductDependencies = (
+			);
+			productName = ExoManager;
+			productReference = 372704F41D9F791A0A200372 /* ExoManager.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A844E896FF4C613550380D6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					95DA96397186ABCBCA4A9E49 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = E2A6F7E00E31909AD9149972 /* Build configuration list for PBXProject "ExoManager" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CE396A1C673D0DB334F012D6;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 54;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				95DA96397186ABCBCA4A9E49 /* ExoManager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		921DBDD750D1EDAA687034C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92333F02CCA2344E21290B93 /* Assets.xcassets in Resources */,
+				DC5ACC8D222F7DE7202F87E8 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		72310275C158F558C7B7093A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40BA38771E7452303CBF6CAD /* ContentView.swift in Sources */,
+				624727D2F765142DC11C99F2 /* ExoLogViewer.swift in Sources */,
+				435BA565EEF6548445B313A8 /* ExoManagerApp.swift in Sources */,
+				F5A35DE62A6168BAA3D0ACCC /* ExoMonitor.swift in Sources */,
+				1C10FC4C8901F51FF4B8BB37 /* ExoNetworkDiscovery.swift in Sources */,
+				FA7F67FBD970B9D35D0FB9AF /* ExoNetworkView.swift in Sources */,
+				76E5DE0239FB8EC88A60D8E2 /* ExoPerformanceView.swift in Sources */,
+				84DEA561281B1F2F30120690 /* ExoServiceManager.swift in Sources */,
+				AFF73E2371861A07437ADFEF /* ExoSettings.swift in Sources */,
+				3D4E5B80858139A45A1FC511 /* ExoSettingsView.swift in Sources */,
+				053D2D08C43247DC0393A063 /* ExoThrottleView.swift in Sources */,
+				642E46E7AF57E5C0306644F6 /* ExoWebView.swift in Sources */,
+				B8C9D1E2F4A5B6C7D8E9F0A1 /* ExoMCPServer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1BEC02012DD13BD9FC27BF79 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = ExoManager/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exolabs.exomanager;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		47C45E938968CAFD8AA47654 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		732C3E43339F89B1934D434F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		85A0578D351C748F0BF4006D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = ExoManager/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.exolabs.exomanager;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		925D1EE74B7EC64BC50B3E19 /* Build configuration list for PBXNativeTarget "ExoManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1BEC02012DD13BD9FC27BF79 /* Debug */,
+				85A0578D351C748F0BF4006D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E2A6F7E00E31909AD9149972 /* Build configuration list for PBXProject "ExoManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				732C3E43339F89B1934D434F /* Debug */,
+				47C45E938968CAFD8AA47654 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3A844E896FF4C613550380D6 /* Project object */;
+}

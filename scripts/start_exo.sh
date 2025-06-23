@@ -90,7 +90,7 @@ start_exo() {
     local exo_executable=$(find_exo_executable)
     if [ -z "$exo_executable" ]; then
         log_message "ERROR: exo executable not found. Please ensure exo is properly installed."
-        return 1
+        exit 1
     fi
     
     log_message "Found exo executable: $exo_executable"
@@ -149,38 +149,10 @@ start_exo() {
         exo_cmd="$exo_cmd $EXO_EXTRA_ARGS"
     fi
     
-    # Start exo in the background
-    log_message "Executing: $exo_cmd"
-    
-    # Run exo directly (launchd handles process management)
-    $exo_cmd >> "$LOG_FILE" 2>&1 &
-    
-    local exo_pid=$!
-    echo "$exo_pid" > "$PID_FILE"
-    
-    log_message "exo started with PID: $exo_pid"
-    
-    # Wait a moment to check if it started successfully
-    sleep 10
-    if ps -p "$exo_pid" > /dev/null 2>&1; then
-        log_message "exo is running successfully"
-        log_message "Web interface available at: http://localhost:${EXO_WEB_PORT:-52415}"
-        log_message "API endpoint available at: http://localhost:${EXO_WEB_PORT:-52415}/v1/chat/completions"
-        
-        # Monitor the exo process and keep the script running
-        log_message "Monitoring exo process..."
-        while ps -p "$exo_pid" > /dev/null 2>&1; do
-            sleep 30
-        done
-        
-        log_message "exo process has stopped"
-        rm -f "$PID_FILE"
-    else
-        log_message "ERROR: exo failed to start"
-        log_message "Check the log file for details: $LOG_FILE"
-        rm -f "$PID_FILE"
-        return 1
-    fi
+    # Start exo by replacing the current script process. This is the robust
+    # way to run daemons under launchd, which will now monitor the correct process.
+    log_message "Executing: exec $exo_cmd"
+    exec $exo_cmd >> "$LOG_FILE" 2>&1
 }
 
 # Function to stop exo
