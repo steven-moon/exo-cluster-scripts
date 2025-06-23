@@ -18,15 +18,19 @@ log_message() {
 
 # Function to check if exo is already running
 is_exo_running() {
+    # Check if any exo process is running (more reliable than PID file)
+    if pgrep -f "exo" > /dev/null 2>&1; then
+        return 0
+    fi
+    
+    # Clean up stale PID file if it exists
     if [ -f "$PID_FILE" ]; then
-        local pid=$(cat "$PID_FILE")
-        if ps -p "$pid" > /dev/null 2>&1; then
-            return 0
-        else
-            # PID file exists but process is dead, clean it up
+        local pid=$(cat "$PID_FILE" 2>/dev/null)
+        if [ -n "$pid" ] && ! ps -p "$pid" > /dev/null 2>&1; then
             rm -f "$PID_FILE"
         fi
     fi
+    
     return 1
 }
 
@@ -148,9 +152,8 @@ start_exo() {
     # Start exo in the background
     log_message "Executing: $exo_cmd"
     
-    # Use nohup to prevent the process from being terminated when the parent script exits
-    # and redirect output properly to capture both stdout and stderr
-    nohup $exo_cmd >> "$LOG_FILE" 2>&1 &
+    # Run exo directly (launchd handles process management)
+    $exo_cmd >> "$LOG_FILE" 2>&1 &
     
     local exo_pid=$!
     echo "$exo_pid" > "$PID_FILE"
@@ -163,6 +166,15 @@ start_exo() {
         log_message "exo is running successfully"
         log_message "Web interface available at: http://localhost:${EXO_WEB_PORT:-52415}"
         log_message "API endpoint available at: http://localhost:${EXO_WEB_PORT:-52415}/v1/chat/completions"
+        
+        # Monitor the exo process and keep the script running
+        log_message "Monitoring exo process..."
+        while ps -p "$exo_pid" > /dev/null 2>&1; do
+            sleep 30
+        done
+        
+        log_message "exo process has stopped"
+        rm -f "$PID_FILE"
     else
         log_message "ERROR: exo failed to start"
         log_message "Check the log file for details: $LOG_FILE"
@@ -207,6 +219,10 @@ case "$1" in
             log_message "exo is already running"
             exit 0
         fi
+        
+        # Clean up any existing PID file before starting
+        rm -f "$PID_FILE"
+        
         start_exo
         ;;
     stop)

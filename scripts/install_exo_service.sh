@@ -186,6 +186,10 @@ install_startup_scripts() {
     cp "$SCRIPT_DIR/$STARTUP_SCRIPT" "$EXO_INSTALL_DIR/scripts/"
     chmod +x "$EXO_INSTALL_DIR/scripts/$STARTUP_SCRIPT"
     
+    print_status "Installing status checker script..."
+    cp "$SCRIPT_DIR/check_exo_status.sh" "$EXO_INSTALL_DIR/scripts/"
+    chmod +x "$EXO_INSTALL_DIR/scripts/check_exo_status.sh"
+    
     print_status "Installing launch daemon configuration..."
     cp "$SCRIPT_DIR/$PLIST_FILE" "$LAUNCH_AGENTS_DIR/"
     

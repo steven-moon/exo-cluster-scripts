@@ -70,13 +70,14 @@ check_installation() {
 check_service() {
     print_header "Service Status"
     
-    # Check if service is loaded
-    if launchctl list | grep -q "$SERVICE_NAME"; then
+    # Check if service is loaded (use sudo since service is loaded as root)
+    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
         print_status "✓ Service is loaded in launchctl"
         
-        # Check if service is running
-        if launchctl list | grep "$SERVICE_NAME" | grep -q "0"; then
-            print_status "✓ Service is running"
+        # Check if service is running (any non-zero PID means it's running)
+        local service_pid=$(sudo launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
+        if [ "$service_pid" != "0" ] && [ "$service_pid" != "-" ]; then
+            print_status "✓ Service is running (PID: $service_pid)"
         else
             print_warning "⚠ Service is loaded but may not be running"
         fi
@@ -202,11 +203,14 @@ check_resources() {
 show_quick_status() {
     local status=""
     
-    # Check if service is loaded and running
-    if launchctl list | grep -q "$SERVICE_NAME" && launchctl list | grep "$SERVICE_NAME" | grep -q "0"; then
-        status="${GREEN}RUNNING${NC}"
-    elif launchctl list | grep -q "$SERVICE_NAME"; then
-        status="${YELLOW}LOADED${NC}"
+    # Check if service is loaded and running (use sudo since service is loaded as root)
+    if sudo launchctl list | grep -q "$SERVICE_NAME"; then
+        local service_pid=$(sudo launchctl list | grep "$SERVICE_NAME" | awk '{print $1}')
+        if [ "$service_pid" != "0" ] && [ "$service_pid" != "-" ]; then
+            status="${GREEN}RUNNING${NC}"
+        else
+            status="${YELLOW}LOADED${NC}"
+        fi
     else
         status="${RED}STOPPED${NC}"
     fi
