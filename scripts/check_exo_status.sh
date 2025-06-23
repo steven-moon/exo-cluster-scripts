@@ -5,8 +5,8 @@
 
 set -e
 
-# Source utility functions
-source "$(dirname "$0")/utils.sh"
+# Source utility functions using an absolute path
+source "/opt/exo/scripts/utils.sh"
 
 # Configuration
 SERVICE_NAME="com.exolabs.exo"

@@ -4,8 +4,8 @@
 
 set -e
 
-# Source utility functions
-source "$(dirname "$0")/utils.sh"
+# Source utility functions using an absolute path
+source "/opt/exo/scripts/utils.sh"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then

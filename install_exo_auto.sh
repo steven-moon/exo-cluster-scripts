@@ -99,16 +99,27 @@ create_directories() {
 
 setup_exo_repository() {
     print_header "Step 3: Setting up exo Repository"
-    if [ -d "$EXO_INSTALL_DIR/.git" ]; then
-        print_status "exo repository already exists, updating..."
-        cd "$EXO_INSTALL_DIR"
-        git fetch origin
-        git reset --hard origin/main
-    else
-        print_status "Cloning exo repository from GitHub..."
-        git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"
-    fi
-    cd "$EXO_INSTALL_DIR"
+    # Run in a subshell to prevent cd from affecting the rest of the script
+    (
+        if [ -d "$EXO_INSTALL_DIR/.git" ]; then
+            print_status "exo repository already exists, updating..."
+            cd "$EXO_INSTALL_DIR"
+            git fetch origin
+            git reset --hard origin/main
+        else
+            print_status "Cloning exo repository from GitHub..."
+            git clone "$EXO_REPO_URL" "$EXO_INSTALL_DIR"
+            cd "$EXO_INSTALL_DIR"
+        fi
+        
+        # Pin numpy version to avoid compilation issues with v2.0.0
+        print_status "Pinning numpy to version < 2.0.0..."
+        sed -i '' 's/"numpy==2.0.0"/"numpy<2.0.0"/g' setup.py
+
+        # Update MLX version to a compatible one
+        print_status "Updating mlx to version 0.26.1..."
+        sed -i '' 's/"mlx==0.22.0"/"mlx==0.26.1"/g' setup.py
+    )
     print_status "Repository setup complete."
 }
 
@@ -126,7 +137,7 @@ setup_virtual_environment() {
     print_status "Upgrading pip and installing 'exo'..."
     pip install --quiet --upgrade pip
     
-    if ! pip install --quiet -e .; then
+    if ! pip install --quiet -e "$EXO_INSTALL_DIR"; then
         print_error "Failed to install 'exo'. Please check the output for errors."
         deactivate
         exit 1
@@ -140,7 +151,7 @@ install_service() {
     print_header "Step 5: Installing System Service"
     print_status "Installing launch daemon and helper scripts..."
     
-    # Copy scripts from the cloned project repo, not the installer repo
+    # Correctly reference the scripts from the directory where the installer is running
     local installer_scripts_dir="$SCRIPT_DIR/scripts"
     local service_scripts_dir="$EXO_INSTALL_DIR/scripts"
     
@@ -148,9 +159,13 @@ install_service() {
     sudo cp "$installer_scripts_dir/check_exo_status.sh" "$service_scripts_dir/"
     sudo cp "$installer_scripts_dir/uninstall_exo_service.sh" "$service_scripts_dir/"
     sudo cp "$installer_scripts_dir/exo_config_example.sh" "$service_scripts_dir/"
+    sudo cp "$installer_scripts_dir/utils.sh" "$service_scripts_dir/" # Also copy utils.sh
     sudo cp "$installer_scripts_dir/$PLIST_FILE" "$LAUNCH_AGENTS_DIR/"
     
     print_status "Creating system-wide symlinks for 'exo' and 'exo-status'..."
+    # Remove old symlinks if they exist to ensure a clean state
+    sudo rm -f "/usr/local/bin/exo"
+    sudo rm -f "/usr/local/bin/exo-status"
     sudo ln -sf "$VENV_DIR/bin/exo" "/usr/local/bin/exo"
     sudo ln -sf "$service_scripts_dir/check_exo_status.sh" "/usr/local/bin/exo-status"
     

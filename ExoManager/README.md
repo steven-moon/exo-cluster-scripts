@@ -250,7 +250,7 @@ If the app freezes during installation or you get permission errors:
 3. **Alternative: Install exo manually first:**
    ```bash
    cd /path/to/exo-cluster-scripts
-   sudo ./scripts/install_exo_service.sh
+   ./install_exo_auto.sh
    ```
    Then use ExoManager to manage the service.
 

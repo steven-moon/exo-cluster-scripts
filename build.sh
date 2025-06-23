@@ -340,7 +340,7 @@ fi
 echo "  - ZIP: $BUILD_DIR/${PROJECT_NAME}.zip"
 echo ""
 print_status "Scripts included in app bundle:"
-echo "  - install_exo_service.sh"
+echo "  - install_exo_auto.sh"
 echo "  - uninstall_exo_service.sh"
 echo "  - start_exo.sh"
 echo "  - check_exo_status.sh"

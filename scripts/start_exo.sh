@@ -7,6 +7,7 @@
 LOG_DIR="/var/log/exo"
 LOG_FILE="$LOG_DIR/exo.log"
 PID_FILE="/var/run/exo.pid"
+VENV_DIR="/opt/exo/venv"
 
 # Create log directory if it doesn't exist
 mkdir -p "$LOG_DIR"

@@ -274,8 +274,9 @@ struct ContentView: View {
                 // User cancelled, do nothing.
                 serviceManager.lastError = nil
             } else {
-                let errorMessage = (anError[NSAppleScript.errorMessage] as? String) ?? "Unknown AppleScript error."
-                serviceManager.lastError = "Failed to relaunch as admin: \\(errorMessage)"
+                // We can't show a useful error message here, just log it.
+                // The user will see a system-level authentication dialog.
+                print("AppleScript execution error: \(anError)")
             }
         } else {
             // Quit the current non-admin instance on success
